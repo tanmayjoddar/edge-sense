@@ -1,0 +1,20 @@
+{
+  "name": "edgesense",
+  "version": "1.0.0",
+  "description": "Offline-First Web-Based P2P Edge Intelligence for Air-Quality Monitoring",
+  "private": true,
+  "scripts": {
+    "server:dev": "cd server && npm run dev",
+    "server:build": "cd server && npm run build",
+    "server:start": "cd server && npm start",
+    "client:dev": "cd client && npm run dev",
+    "client:build": "cd client && npm run build",
+    "db:init": "cd server && npm run db:init",
+    "db:seed": "cd server && npm run db:seed",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "build": "npm run server:build && npm run client:build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

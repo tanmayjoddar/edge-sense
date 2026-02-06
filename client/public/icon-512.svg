@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0f172a"/>
+  <polygon points="256,72 432,392 80,392" fill="none" stroke="url(#g)" stroke-width="14"/>
+  <circle cx="256" cy="100" r="20" fill="#06b6d4"/>
+  <circle cx="120" cy="372" r="20" fill="#8b5cf6"/>
+  <circle cx="392" cy="372" r="20" fill="#8b5cf6"/>
+  <circle cx="256" cy="256" r="14" fill="#10b981"/>
+  <line x1="256" y1="100" x2="120" y2="372" stroke="#06b6d450" stroke-width="4"/>
+  <line x1="256" y1="100" x2="392" y2="372" stroke="#06b6d450" stroke-width="4"/>
+  <line x1="120" y1="372" x2="392" y2="372" stroke="#8b5cf650" stroke-width="4"/>
+  <text x="256" y="470" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="42" font-weight="bold">EdgeSense</text>
+</svg>
