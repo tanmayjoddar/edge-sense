@@ -7,15 +7,31 @@ import { config } from "../config";
 
 let pool: Pool;
 
-export function getPool(): Pool {
-  if (!pool) {
+export function getPool(customConnectionString?: string): Pool {
+  if (customConnectionString) {
     const isSsl =
-      config.db.connectionString.includes("neon.tech") ||
-      config.db.connectionString.includes("sslmode=require") ||
+      customConnectionString.includes("neon.tech") ||
+      customConnectionString.includes("sslmode=require") ||
+      process.env.NODE_ENV === "production";
+
+    return new Pool({
+      connectionString: customConnectionString,
+      ssl: isSsl ? { rejectUnauthorized: false } : undefined,
+      max: config.db.maxConnections,
+      idleTimeoutMillis: config.db.idleTimeoutMs,
+      connectionTimeoutMillis: config.db.connectionTimeoutMs,
+    });
+  }
+
+  if (!pool) {
+    const connStr = config.db.connectionString;
+    const isSsl =
+      connStr.includes("neon.tech") ||
+      connStr.includes("sslmode=require") ||
       process.env.NODE_ENV === "production";
 
     pool = new Pool({
-      connectionString: config.db.connectionString,
+      connectionString: connStr,
       ssl: isSsl ? { rejectUnauthorized: false } : undefined,
       max: config.db.maxConnections,
       idleTimeoutMillis: config.db.idleTimeoutMs,

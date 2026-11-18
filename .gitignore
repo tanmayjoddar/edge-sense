@@ -8,3 +8,5 @@ Thumbs.db
 .vscode/
 coverage/
 *.tsbuildinfo
+.neon
+.env.local

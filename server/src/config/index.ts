@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
 import path from "path";
 
+// Load environment variables from .env.local and .env across root and server
+dotenv.config({ path: path.resolve(__dirname, "../../.env.local") });
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 function requiredEnv(key: string): string {
   const value = process.env[key];
@@ -21,7 +25,14 @@ export const config = {
   wsPort: parseInt(optionalEnv("WS_PORT", "3002"), 10),
 
   db: {
-    connectionString: requiredEnv("DATABASE_URL"),
+    connectionString: optionalEnv(
+      "DATABASE_URL",
+      optionalEnv("DATABASE_URL_UNPOOLED", ""),
+    ),
+    unpooledConnectionString: optionalEnv(
+      "DATABASE_URL_UNPOOLED",
+      optionalEnv("DATABASE_URL", ""),
+    ),
     host: optionalEnv("DB_HOST", "localhost"),
     port: parseInt(optionalEnv("DB_PORT", "5432"), 10),
     name: optionalEnv("DB_NAME", "edgesense"),
