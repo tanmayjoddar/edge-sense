@@ -23,8 +23,108 @@ import {
   addReading,
 } from "../p2p/aggregation";
 import { v4 as uuidv4 } from "uuid";
-import { IsometricCity } from "./IsometricCity";
 
+/* ─── SVG Icon Components ────────────────────────────── */
+const Icons = {
+  logo: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" />
+    </svg>
+  ),
+  thermometer: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+    </svg>
+  ),
+  wind: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2" /><path d="M9.6 4.6A2 2 0 1 1 11 8H2" /><path d="M12.6 19.4A2 2 0 1 0 14 16H2" />
+    </svg>
+  ),
+  droplet: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+    </svg>
+  ),
+  cloud: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+    </svg>
+  ),
+  activity: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
+  ),
+  database: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+    </svg>
+  ),
+  radio: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="2" /><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" />
+    </svg>
+  ),
+  server: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="8" rx="2" ry="2" /><rect x="2" y="14" width="20" height="8" rx="2" ry="2" /><line x1="6" y1="6" x2="6.01" y2="6" /><line x1="6" y1="18" x2="6.01" y2="18" />
+    </svg>
+  ),
+  upload: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+    </svg>
+  ),
+  shield: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  alertTriangle: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  ),
+  check: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  ),
+  arrowRight: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+  ),
+  chevronRight: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  ),
+  sensors: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" />
+    </svg>
+  ),
+  mesh: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" /><circle cx="4" cy="6" r="2" /><circle cx="20" cy="6" r="2" /><circle cx="4" cy="18" r="2" /><circle cx="20" cy="18" r="2" />
+      <line x1="9.5" y1="10" x2="5.5" y2="7.5" /><line x1="14.5" y1="10" x2="18.5" y2="7.5" /><line x1="9.5" y1="14" x2="5.5" y2="16.5" /><line x1="14.5" y1="14" x2="18.5" y2="16.5" />
+    </svg>
+  ),
+  hdd: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="12" x2="2" y2="12" /><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /><line x1="6" y1="16" x2="6.01" y2="16" /><line x1="10" y1="16" x2="10.01" y2="16" />
+    </svg>
+  ),
+  zap: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  ),
+};
+
+/* ─── Helpers ────────────────────────────────────────── */
 function getSensorId(): string {
   let id = localStorage.getItem("edgesense_sensor_id");
   if (!id) {
@@ -34,8 +134,15 @@ function getSensorId(): string {
   return id;
 }
 
+function getAqiLevel(aqi: number): { label: string; cls: string } {
+  if (aqi <= 50) return { label: "Good", cls: "good" };
+  if (aqi <= 100) return { label: "Moderate", cls: "moderate" };
+  return { label: "Unhealthy", cls: "unhealthy" };
+}
+
 const SENSOR_ID = getSensorId();
 
+/* ─── Main App ───────────────────────────────────────── */
 export default function App() {
   const [stations, setStations] = useState<any[]>([]);
   const [selectedStation, setSelectedStation] = useState<any>(null);
@@ -47,7 +154,6 @@ export default function App() {
   const [localStats, setLocalStats] = useState({ readings: 0, unsynced: 0 });
   const [liveClock, setLiveClock] = useState<string>("");
 
-  // Live environmental telemetry state
   const [telemetry, setTelemetry] = useState({
     temperature: 34,
     apparentTemperature: 36,
@@ -58,27 +164,23 @@ export default function App() {
     co2: 540,
     aqi: 166,
     condition: "Mostly cloudy",
-    conditionTag: "Live Edge Telemetry",
   });
 
-  // Real-time clock updater
+  /* ─── Clock ─────── */
   useEffect(() => {
-    const updateTime = () => {
+    const update = () => {
       const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      setLiveClock(`Today, ${now.toLocaleDateString("en-US", options)}`);
+      setLiveClock(now.toLocaleDateString("en-US", {
+        weekday: "short", month: "short", day: "numeric",
+        hour: "2-digit", minute: "2-digit",
+      }));
     };
-    updateTime();
-    const timer = setInterval(updateTime, 30000);
-    return () => clearInterval(timer);
+    update();
+    const t = setInterval(update, 30000);
+    return () => clearInterval(t);
   }, []);
 
-  // Refresh local IndexedDB storage counters
+  /* ─── Local Stats ─── */
   const refreshLocalStats = useCallback(async () => {
     try {
       const [readings, unsynced] = await Promise.all([
@@ -86,12 +188,10 @@ export default function App() {
         getUnsyncedCount(),
       ]);
       setLocalStats({ readings, unsynced });
-    } catch {
-      // Offline fallback
-    }
+    } catch { /* offline */ }
   }, []);
 
-  // Fetch stations, alerts, and stats from Neon Cloud Backend
+  /* ─── Neon Cloud Fetch ─── */
   const fetchNeonData = useCallback(async () => {
     try {
       const [sensorsList, alertsList, statsData] = await Promise.all([
@@ -99,37 +199,30 @@ export default function App() {
         api.alerts.unresolved(),
         api.stats.system(),
       ]);
-
       if (sensorsList && sensorsList.length > 0) {
         setStations(sensorsList);
         setSelectedStation((prev: any) => prev || sensorsList[0]);
       }
       setAlerts(alertsList || []);
       setStats(statsData || null);
-    } catch (err: any) {
-      console.warn("[EdgeSense] Server unreachable — running in offline edge mode");
+    } catch {
+      console.warn("[EdgeSense] Server unreachable — offline edge mode");
     }
   }, []);
 
-  // Fetch real atmospheric data for active coordinates
+  /* ─── Atmospheric Data ─── */
   const fetchAtmosphericData = useCallback(async (lat: number, lng: number) => {
     try {
       const [weatherRes, airRes] = await Promise.all([
-        fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m`
-        ),
-        fetch(
-          `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lng}&current=pm10,pm2_5,us_aqi`
-        ),
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m`),
+        fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lng}&current=pm10,pm2_5,us_aqi`),
       ]);
-
       const weather = await weatherRes.json();
       const air = await airRes.json();
 
       if (weather?.current) {
         const curW = weather.current;
         const curA = air?.current || {};
-
         const temp = Math.round(curW.temperature_2m ?? 34);
         const feel = Math.round(curW.apparent_temperature ?? 36);
         const hum = Math.round(curW.relative_humidity_2m ?? 65);
@@ -138,30 +231,21 @@ export default function App() {
         const pm10Val = Math.round(curA.pm10 ?? 110);
         const aqiVal = Math.round(curA.us_aqi ?? 166);
 
-        let cond = "Clean Air";
+        let cond = "Good Air Quality";
         if (aqiVal > 150) cond = "Unhealthy AQI";
         else if (aqiVal > 100) cond = "Moderate AQI";
-        else cond = "Good Air Quality";
 
         setTelemetry({
-          temperature: temp,
-          apparentTemperature: feel,
-          humidity: hum,
-          windSpeed: wind,
-          pm25: pm25Val,
-          pm10: pm10Val,
-          co2: 540,
-          aqi: aqiVal,
-          condition: cond,
-          conditionTag: "Live Edge Telemetry",
+          temperature: temp, apparentTemperature: feel,
+          humidity: hum, windSpeed: wind,
+          pm25: pm25Val, pm10: pm10Val, co2: 540,
+          aqi: aqiVal, condition: cond,
         });
       }
-    } catch {
-      // Preserve current telemetry if offline
-    }
+    } catch { /* preserve current */ }
   }, []);
 
-  // Initial Boot & Automated Edge Telemetry Node
+  /* ─── Boot & Background Telemetry ─── */
   useEffect(() => {
     fetchNeonData();
     refreshLocalStats();
@@ -170,24 +254,17 @@ export default function App() {
       ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "")
       : "";
 
-    // 1. Cloud Sync Engine
     startSync({
       serverUrl: apiBase,
       sensorId: SENSOR_ID,
-      onSyncComplete: () => {
-        refreshLocalStats();
-      },
-      onNetworkChange: (quality) => {
-        setNetworkQuality(quality);
-      },
+      onSyncComplete: () => refreshLocalStats(),
+      onNetworkChange: (quality) => setNetworkQuality(quality),
     });
 
-    // 2. WebRTC P2P Mesh Network
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const defaultWsUrl =
-      window.location.hostname === "localhost"
-        ? `${wsProtocol}//${window.location.hostname}:3002`
-        : `${wsProtocol}//${window.location.host}`;
+    const defaultWsUrl = window.location.hostname === "localhost"
+      ? `${wsProtocol}//${window.location.hostname}:3002`
+      : `${wsProtocol}//${window.location.host}`;
     const wsUrl = import.meta.env.VITE_WS_URL || defaultWsUrl;
 
     initP2P({
@@ -195,60 +272,34 @@ export default function App() {
       sensorId: SENSOR_ID,
       onReading: (_peerId, reading) => {
         addReading(reading);
-        storeReading({
-          ...reading,
-          id: uuidv4(),
-          source: "p2p_relay",
-          synced: false,
-          is_anomaly: false,
-        });
+        storeReading({ ...reading, id: uuidv4(), source: "p2p_relay", synced: false, is_anomaly: false });
         refreshLocalStats();
       },
-      onPeersChange: (peers) => {
-        setConnectedPeers(peers);
-      },
+      onPeersChange: (peers) => setConnectedPeers(peers),
     });
 
-    // 3. Automated Edge Sensor Node (Continuous background telemetry)
     createSimulator(SENSOR_ID, {
-      basePM25: 75,
-      baseCO2: 540,
-      baseTemp: 34,
-      baseHumidity: 65,
-      noise: 0.05,
-      anomalyChance: 0.02,
+      basePM25: 75, baseCO2: 540, baseTemp: 34,
+      baseHumidity: 65, noise: 0.05, anomalyChance: 0.02,
     });
 
     startSimulator(8000, async (reading) => {
-      const fullReading = {
-        ...reading,
-        id: uuidv4(),
-        source: "direct" as const,
-        synced: false,
-      };
-
-      await storeReading(fullReading);
+      const full = { ...reading, id: uuidv4(), source: "direct" as const, synced: false };
+      await storeReading(full);
       broadcastReading({
-        sensor_id: reading.sensor_id,
-        timestamp: reading.timestamp,
-        pm25: reading.pm25,
-        pm10: reading.pm10,
-        co2: reading.co2,
-        temperature: reading.temperature,
-        humidity: reading.humidity,
+        sensor_id: reading.sensor_id, timestamp: reading.timestamp,
+        pm25: reading.pm25, pm10: reading.pm10, co2: reading.co2,
+        temperature: reading.temperature, humidity: reading.humidity,
         quality_score: reading.quality_score,
       });
-
       refreshLocalStats();
     });
 
-    // Online/Offline status listeners
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Periodic refresh
     const interval = setInterval(() => {
       fetchNeonData();
       refreshLocalStats();
@@ -264,7 +315,6 @@ export default function App() {
     };
   }, [fetchNeonData, refreshLocalStats]);
 
-  // When selected station changes, fetch atmospheric data
   useEffect(() => {
     if (selectedStation) {
       fetchAtmosphericData(selectedStation.latitude, selectedStation.longitude);
@@ -273,7 +323,6 @@ export default function App() {
     }
   }, [selectedStation, fetchAtmosphericData]);
 
-  // Handle alert resolution
   const handleResolveAlert = async (id: string) => {
     try {
       await api.alerts.resolve(id);
@@ -284,187 +333,217 @@ export default function App() {
   };
 
   const stationName = useMemo(() => {
-    if (!selectedStation) return "Anand Vihar Station • Delhi NCR";
+    if (!selectedStation) return "Anand Vihar Station";
     return selectedStation.name;
   }, [selectedStation]);
 
+  const aqiInfo = useMemo(() => getAqiLevel(telemetry.aqi), [telemetry.aqi]);
+
+  const totalCloudReadings = stats?.data?.total_readings
+    ? Number(stats.data.total_readings).toLocaleString()
+    : "3,468";
+
   return (
-    <div className="web-page">
-      {/* 1. Floating Island Navbar */}
-      <div className="navbar-island-wrapper">
-        <nav className="navbar-island">
-          <a href="#live-telemetry" className="nav-brand">
-            <span className="nav-logo-icon">⬡</span>
-            <span className="nav-logo-text">EdgeSense</span>
-            <span className="nav-tagline">P2P Edge Intelligence</span>
+    <div className="dashboard-shell">
+      {/* ═══ 1. NAVBAR ═══ */}
+      <div className="navbar-wrapper">
+        <nav className="navbar">
+          <a href="#hero" className="nav-brand">
+            <div className="nav-logo">{Icons.logo}</div>
+            <span className="nav-brand-text">EdgeSense</span>
           </a>
 
           <div className="nav-links">
-            <a href="#live-telemetry" className="nav-link active">
-              Telemetry
-            </a>
-            <a href="#architecture" className="nav-link">
-              Architecture
-            </a>
+            <a href="#hero" className="nav-link active">Dashboard</a>
+            <a href="#pipeline" className="nav-link">Pipeline</a>
             <a href="#stations" className="nav-link">
-              Stations ({stations.length})
+              Stations<span className="link-count">{stations.length}</span>
             </a>
-            <a href="#mesh-network" className="nav-link">
-              Edge Mesh
-            </a>
+            <a href="#mesh" className="nav-link">Edge Mesh</a>
             <a href="#alerts" className="nav-link">
-              Alerts ({alerts.length})
+              Alerts<span className="link-count">{alerts.length}</span>
             </a>
           </div>
 
-          <div className="nav-actions">
-            <div className="nav-status-badge">
-              <span className="pulse-dot"></span>
-              {isOnline ? "P2P Mesh Active" : "Offline Edge Mode"}
+          <div className="nav-right">
+            <div className={`nav-status ${isOnline ? "online" : "offline"}`}>
+              <span className="status-dot"></span>
+              {isOnline ? "Live" : "Offline"}
             </div>
           </div>
         </nav>
       </div>
 
-      <div className="web-container">
-        {/* 2. Hero Section */}
-        <section id="live-telemetry" className="hero-section">
+      <div className="dashboard-container">
+        {/* ═══ 2. HERO — Command Center ═══ */}
+        <section id="hero" className="hero-section">
           <div className="hero-grid">
-            {/* Left Column: Telemetry & Status */}
-            <div className="hero-content">
-              <div className="hero-pill-label">
-                <span>🍃</span> Offline-First Web-Based P2P Edge Intelligence
-              </div>
-
-              <h1 className="hero-title">Air Quality & Environmental Telemetry</h1>
-
-              {/* Station Info Banner */}
-              <div className="hero-station-card">
+            {/* Left: Primary Environment Card */}
+            <div className="hero-primary">
+              <div className="hero-station-row">
                 <div className="hero-station-info">
-                  <span className="hero-station-name">📍 {stationName}</span>
-                  <span className="hero-station-coord">
+                  <div className="hero-station-name">
+                    <span className="station-dot"></span>
+                    {stationName}
+                  </div>
+                  <div className="hero-station-coords">
                     {selectedStation
-                      ? `${selectedStation.latitude.toFixed(4)}°N, ${selectedStation.longitude.toFixed(4)}°E • Delhi NCR`
-                      : "28.6469°N, 77.3164°E • Delhi NCR"}
-                  </span>
-                </div>
-                <div style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 600 }}>
-                  {liveClock}
-                </div>
-              </div>
-
-              {/* Primary Gauge */}
-              <div className="hero-telemetry-highlight">
-                <div className="hero-main-reading">
-                  <span className="big-temp">{telemetry.temperature}</span>
-                  <span className="temp-unit">°C</span>
-                </div>
-
-                <div className="hero-condition-box">
-                  <div className="hero-condition-title">{telemetry.condition}</div>
-                  <div className="hero-condition-desc">
-                    PM2.5: {telemetry.pm25} µg/m³ • US AQI: {telemetry.aqi} • Distributed sensor node active
+                      ? `${selectedStation.latitude.toFixed(4)}°N  ${selectedStation.longitude.toFixed(4)}°E`
+                      : "28.6469°N  77.3164°E"}
                   </div>
                 </div>
+                <div className="hero-timestamp">{liveClock}</div>
               </div>
 
-              {/* 4-Tile Minimalist Metric Grid */}
-              <div className="hero-tiles-grid">
-                <div className="hero-tile">
-                  <span className="hero-tile-icon">°C</span>
-                  <span className="hero-tile-label">Feel like</span>
-                  <span className="hero-tile-val">{telemetry.apparentTemperature}°</span>
+              {/* Temperature + Condition */}
+              <div className="hero-temp-block">
+                <div className="temp-display">
+                  <span className="temp-value">{telemetry.temperature}</span>
+                  <span className="temp-unit">°C</span>
                 </div>
-
-                <div className="hero-tile">
-                  <span className="hero-tile-icon">💨</span>
-                  <span className="hero-tile-label">Wind</span>
-                  <span className="hero-tile-val">{telemetry.windSpeed} km/h</span>
-                </div>
-
-                <div className="hero-tile">
-                  <span className="hero-tile-icon">☂</span>
-                  <span className="hero-tile-label">Air Quality</span>
-                  <span className="hero-tile-val">{telemetry.pm25} µg/m³</span>
-                </div>
-
-                <div className="hero-tile">
-                  <span className="hero-tile-icon">💧</span>
-                  <span className="hero-tile-label">Humidity</span>
-                  <span className="hero-tile-val">{telemetry.humidity}%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: 3D Isometric Island Showcase */}
-            <div className="hero-visual-card">
-              <div className="visual-card-header">
-                <span>EDGE SENSOR HUB #{SENSOR_ID.substring(0, 6)}</span>
-                <span className="visual-badge">P2P DATA CHANNEL</span>
-              </div>
-
-              <div className="isometric-wrapper">
-                <IsometricCity />
-              </div>
-
-              <div className="visual-footer-stats">
-                <div className="visual-stat-item">
-                  <span className="visual-stat-label">Network Savings</span>
-                  <span className="visual-stat-val" style={{ color: "var(--accent-green)" }}>
-                    ~85%
+                <div className="temp-condition">
+                  <span className="condition-label">{telemetry.condition}</span>
+                  <span className="condition-detail">
+                    PM2.5: {telemetry.pm25} µg/m³ ·{" "}
+                    <span className={`aqi-badge ${aqiInfo.cls}`}>
+                      <span className="aqi-dot"></span>
+                      AQI {telemetry.aqi} — {aqiInfo.label}
+                    </span>
                   </span>
                 </div>
-                <div className="visual-stat-item">
-                  <span className="visual-stat-label">Active Peers</span>
-                  <span className="visual-stat-val">{connectedPeers.length} online</span>
+              </div>
+
+              {/* 4 Metric Tiles */}
+              <div className="hero-metrics-row">
+                <div className="metric-tile">
+                  <div className="metric-tile-header">
+                    <div className="metric-icon blue">{Icons.thermometer}</div>
+                    <span className="metric-label">Feels like</span>
+                  </div>
+                  <span className="metric-value">{telemetry.apparentTemperature}°</span>
                 </div>
-                <div className="visual-stat-item">
-                  <span className="visual-stat-label">Cloud Backend</span>
-                  <span className="visual-stat-val">Neon Postgres</span>
+                <div className="metric-tile">
+                  <div className="metric-tile-header">
+                    <div className="metric-icon green">{Icons.wind}</div>
+                    <span className="metric-label">Wind</span>
+                  </div>
+                  <span className="metric-value">{telemetry.windSpeed} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-muted)' }}>km/h</span></span>
+                </div>
+                <div className="metric-tile">
+                  <div className="metric-tile-header">
+                    <div className="metric-icon amber">{Icons.cloud}</div>
+                    <span className="metric-label">PM10</span>
+                  </div>
+                  <span className="metric-value">{telemetry.pm10}</span>
+                </div>
+                <div className="metric-tile">
+                  <div className="metric-tile-header">
+                    <div className="metric-icon purple">{Icons.droplet}</div>
+                    <span className="metric-label">Humidity</span>
+                  </div>
+                  <span className="metric-value">{telemetry.humidity}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Stats Column */}
+            <div className="hero-stats-panel">
+              <div className="stat-card">
+                <div className="stat-icon-box blue">{Icons.sensors}</div>
+                <div className="stat-content">
+                  <span className="stat-label">Active Sensors</span>
+                  <span className="stat-value">{stations.length || 12}</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-box green">{Icons.database}</div>
+                <div className="stat-content">
+                  <span className="stat-label">Cloud Readings</span>
+                  <span className="stat-value">{totalCloudReadings}</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-box purple">{Icons.mesh}</div>
+                <div className="stat-content">
+                  <span className="stat-label">P2P Peers</span>
+                  <span className="stat-value">
+                    {connectedPeers.length}<span className="stat-unit">connected</span>
+                  </span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-box amber">{Icons.upload}</div>
+                <div className="stat-content">
+                  <span className="stat-label">Bandwidth Saved</span>
+                  <span className="stat-value" style={{ color: 'var(--green)' }}>~85%</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-box red">{Icons.alertTriangle}</div>
+                <div className="stat-content">
+                  <span className="stat-label">Active Alerts</span>
+                  <span className="stat-value" style={alerts.length > 0 ? { color: 'var(--red)' } : {}}>
+                    {alerts.length}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 3. Understandable Architecture Strip */}
-        <section id="architecture" className="section-block">
-          <div className="architecture-strip">
-            <div className="arch-card">
-              <div className="arch-icon-box">💾</div>
-              <h3 className="arch-title">1. Offline-First IndexedDB</h3>
-              <p className="arch-desc">
-                Sensors store readings locally inside browser IndexedDB. If internet connectivity drops, edge nodes continue logging and aggregating with zero data loss for up to 168+ hours.
-              </p>
-            </div>
+        {/* ═══ 3. DATA PIPELINE ═══ */}
+        <section id="pipeline" className="section">
+          <div className="section-header">
+            <div className="section-eyebrow">System Architecture</div>
+            <div className="section-title">Data Pipeline</div>
+            <div className="section-desc">How sensor data flows from edge devices to the cloud</div>
+          </div>
 
-            <div className="arch-card">
-              <div className="arch-icon-box">🔗</div>
-              <h3 className="arch-title">2. WebRTC P2P Mesh</h3>
-              <p className="arch-desc">
-                Nearby edge nodes discover each other and stream telemetry peer-to-peer using direct WebRTC DataChannels, eliminating redundant uploads and saving over 85% of cloud bandwidth.
-              </p>
+          <div className="pipeline-strip">
+            <div className="pipeline-node">
+              <span className="pipeline-step">Step 01</span>
+              <div className="pipeline-node-icon" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>{Icons.radio}</div>
+              <div className="pipeline-node-title">Sensor Capture</div>
+              <div className="pipeline-node-desc">Edge nodes capture PM2.5, PM10, temperature, humidity readings every 8 seconds</div>
             </div>
-
-            <div className="arch-card">
-              <div className="arch-icon-box">⚡</div>
-              <h3 className="arch-title">3. Neon PostgreSQL Fusion</h3>
-              <p className="arch-desc">
-                When online, adaptive sync uploads deduplicated summaries to Neon cloud database with pure SQL time-series queries, window aggregations, and automated spike alerts.
-              </p>
+            <div className="pipeline-arrow">{Icons.chevronRight}</div>
+            <div className="pipeline-node">
+              <span className="pipeline-step">Step 02</span>
+              <div className="pipeline-node-icon" style={{ background: 'var(--green-dim)', color: 'var(--green)' }}>{Icons.hdd}</div>
+              <div className="pipeline-node-title">IndexedDB Buffer</div>
+              <div className="pipeline-node-desc">Readings stored locally in browser IndexedDB for offline resilience, zero data loss</div>
+            </div>
+            <div className="pipeline-arrow">{Icons.chevronRight}</div>
+            <div className="pipeline-node">
+              <span className="pipeline-step">Step 03</span>
+              <div className="pipeline-node-icon" style={{ background: 'var(--purple-dim)', color: 'var(--purple)' }}>{Icons.mesh}</div>
+              <div className="pipeline-node-title">P2P Broadcast</div>
+              <div className="pipeline-node-desc">WebRTC DataChannels share readings peer-to-peer, reducing cloud bandwidth by 85%</div>
+            </div>
+            <div className="pipeline-arrow">{Icons.chevronRight}</div>
+            <div className="pipeline-node">
+              <span className="pipeline-step">Step 04</span>
+              <div className="pipeline-node-icon" style={{ background: 'var(--amber-dim)', color: 'var(--amber)' }}>{Icons.zap}</div>
+              <div className="pipeline-node-title">Edge Aggregation</div>
+              <div className="pipeline-node-desc">Client-side windowed aggregations compute min, max, avg before cloud sync</div>
+            </div>
+            <div className="pipeline-arrow">{Icons.chevronRight}</div>
+            <div className="pipeline-node">
+              <span className="pipeline-step">Step 05</span>
+              <div className="pipeline-node-icon" style={{ background: 'var(--red-dim)', color: 'var(--red)' }}>{Icons.database}</div>
+              <div className="pipeline-node-title">Neon PostgreSQL</div>
+              <div className="pipeline-node-desc">Deduplicated summaries sync to Neon cloud with SQL time-series queries and spike alerts</div>
             </div>
           </div>
         </section>
 
-        {/* 4. Live Station Directory (Neon PostgreSQL) */}
-        <section id="stations" className="section-block">
-          <div className="section-header-row">
-            <div className="section-heading-group">
-              <span className="section-eyebrow">Neon Cloud Registry</span>
-              <h2 className="section-main-title">Monitoring Station Network</h2>
-              <p className="section-subtitle">
-                12 operational Delhi NCR air quality stations stored in Neon PostgreSQL
-              </p>
+        {/* ═══ 4. STATIONS ═══ */}
+        <section id="stations" className="section">
+          <div className="section-header">
+            <div className="section-eyebrow">Neon Cloud Registry</div>
+            <div className="section-title">Monitoring Stations</div>
+            <div className="section-desc">
+              {stations.length} operational air quality stations in Delhi NCR stored in Neon PostgreSQL
             </div>
           </div>
 
@@ -472,174 +551,177 @@ export default function App() {
             {stations.map((s) => (
               <div
                 key={s.id}
-                className={`station-card ${selectedStation?.id === s.id ? "active-selected" : ""}`}
+                className={`station-card ${selectedStation?.id === s.id ? "selected" : ""}`}
                 onClick={() => setSelectedStation(s)}
               >
-                <div className="station-card-top">
+                <div className="station-card-header">
                   <div>
-                    <h4 className="station-card-name">{s.name}</h4>
-                    <p className="station-card-coord">
+                    <div className="station-name">{s.name}</div>
+                    <div className="station-coord">
                       {s.latitude.toFixed(4)}°N, {s.longitude.toFixed(4)}°E
-                    </p>
+                    </div>
                   </div>
-                  <span className="station-status-pill">{s.status}</span>
+                  <span className={`station-badge ${s.status === "active" ? "active" : "standby"}`}>
+                    {s.status}
+                  </span>
                 </div>
-
-                <div className="station-card-btn">
-                  {selectedStation?.id === s.id ? "✓ Currently Active Station" : "Inspect Live Telemetry →"}
+                <div className="station-card-action">
+                  {selectedStation?.id === s.id ? (
+                    <><span className="icon-inline" style={{ width: 14, height: 14, color: 'var(--accent)' }}>{Icons.check}</span> Active Station</>
+                  ) : (
+                    <>View Telemetry <span className="icon-inline" style={{ width: 14, height: 14 }}>{Icons.chevronRight}</span></>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 5. Edge Mesh Network & Offline Sync */}
-        <section id="mesh-network" className="section-block">
-          <div className="section-header-row">
-            <div className="section-heading-group">
-              <span className="section-eyebrow">Decentralized Edge Topology</span>
-              <h2 className="section-main-title">WebRTC Mesh & Storage Buffer</h2>
-              <p className="section-subtitle">
-                Real-time peer discovery, offline queues, and adaptive bandwidth optimization
-              </p>
+        {/* ═══ 5. EDGE MESH & SYNC ═══ */}
+        <section id="mesh" className="section">
+          <div className="section-header">
+            <div className="section-eyebrow">Decentralized Edge Topology</div>
+            <div className="section-title">WebRTC Mesh & Storage</div>
+            <div className="section-desc">
+              Peer discovery, offline queues, and adaptive cloud synchronization
             </div>
           </div>
 
-          <div className="mesh-dashboard-grid">
-            <div className="mesh-status-card">
-              <h3 style={{ fontSize: "16px", fontWeight: 700 }}>Peer-to-Peer WebRTC Mesh</h3>
-              
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Local Edge Sensor ID</span>
-                <span className="mesh-item-val">{SENSOR_ID.substring(0, 14)}...</span>
+          <div className="mesh-grid">
+            {/* P2P Mesh Panel */}
+            <div className="mesh-panel">
+              <div className="mesh-panel-title">
+                <span className="title-dot" style={{ background: 'var(--accent)' }}></span>
+                P2P WebRTC Mesh
               </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Connected WebRTC Peers</span>
-                <span className="mesh-item-val" style={{ color: "var(--accent-green)" }}>
-                  {connectedPeers.length} Active Nodes
+
+              <div className="mesh-row">
+                <span className="mesh-row-label">Local Sensor ID</span>
+                <span className="mesh-row-value">{SENSOR_ID.substring(0, 14)}...</span>
+              </div>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Connected Peers</span>
+                <span className="mesh-row-value green">{connectedPeers.length} nodes</span>
+              </div>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Bandwidth Reduction</span>
+                <span className="mesh-row-value green">85.2% saved</span>
+              </div>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Connection Quality</span>
+                <span className={`mesh-row-value ${networkQuality === "good" ? "green" : networkQuality === "degraded" ? "amber" : "red"}`}>
+                  {networkQuality.toUpperCase()}
                 </span>
-              </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Edge Bandwidth Reduction</span>
-                <span className="mesh-item-val" style={{ color: "var(--accent-green)" }}>
-                  85.2% Saved
-                </span>
-              </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Connection Quality</span>
-                <span className="mesh-item-val">{networkQuality.toUpperCase()}</span>
               </div>
 
               <div>
-                <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 600 }}>
-                  Active Peer Mesh Nodes (Open app in multiple browser tabs to connect):
-                </span>
-                <div className="peer-list-box">
-                  <div className="peer-node-pill">📍 You (Local Node)</div>
+                <span className="metric-label" style={{ marginBottom: 8, display: 'block' }}>Active Peer Topology</span>
+                <div className="peer-topology">
+                  <div className="peer-pill self">
+                    <span className="peer-dot"></span>
+                    You (Local)
+                  </div>
                   {connectedPeers.map((p) => (
-                    <div className="peer-node-pill" key={p}>
-                      🌐 Peer {p.substring(0, 6)}
+                    <div className="peer-pill remote" key={p}>
+                      <span className="peer-dot"></span>
+                      Peer {p.substring(0, 6)}
                     </div>
                   ))}
-                  {connectedPeers.length === 0 && (
-                    <span style={{ fontSize: "12px", color: "var(--text-subtle)", fontStyle: "italic" }}>
-                      Open this URL in another browser tab to simulate P2P edge collaboration!
-                    </span>
-                  )}
                 </div>
+                {connectedPeers.length === 0 && (
+                  <div className="peer-hint" style={{ marginTop: 8 }}>
+                    Open this URL in another tab to form a P2P mesh
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="mesh-status-card">
-              <h3 style={{ fontSize: "16px", fontWeight: 700 }}>Offline Storage & Neon Cloud Sync</h3>
+            {/* Storage & Sync Panel */}
+            <div className="mesh-panel">
+              <div className="mesh-panel-title">
+                <span className="title-dot" style={{ background: 'var(--green)' }}></span>
+                Offline Storage & Cloud Sync
+              </div>
 
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Local IndexedDB Records</span>
-                <span className="mesh-item-val">{localStats.readings} stored locally</span>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Local IndexedDB Records</span>
+                <span className="mesh-row-value">{localStats.readings.toLocaleString()}</span>
               </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Pending Cloud Sync Queue</span>
-                <span className="mesh-item-val">{localStats.unsynced} queued</span>
-              </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Cloud Database</span>
-                <span className="mesh-item-val">Neon PostgreSQL (Pooler Active)</span>
-              </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Total Cloud Readings Ingested</span>
-                <span className="mesh-item-val">
-                  {stats?.data?.total_readings || "3,468+"} readings
+              <div className="mesh-row">
+                <span className="mesh-row-label">Pending Sync Queue</span>
+                <span className={`mesh-row-value ${localStats.unsynced > 0 ? "amber" : "green"}`}>
+                  {localStats.unsynced}
                 </span>
               </div>
-              <div className="mesh-metric-item">
-                <span className="mesh-item-label">Cloud Health</span>
-                <span className="mesh-item-val" style={{ color: "var(--accent-green)" }}>
-                  {isOnline ? "✅ Online & Synchronized" : "⚠️ Offline Storage Mode"}
+              <div className="mesh-row">
+                <span className="mesh-row-label">Cloud Database</span>
+                <span className="mesh-row-value">Neon PostgreSQL</span>
+              </div>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Total Cloud Readings</span>
+                <span className="mesh-row-value">{totalCloudReadings}</span>
+              </div>
+              <div className="mesh-row">
+                <span className="mesh-row-label">Sync Status</span>
+                <span className={`mesh-row-value ${isOnline ? "green" : "amber"}`}>
+                  {isOnline ? "SYNCHRONIZED" : "OFFLINE BUFFER"}
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 6. Real-time Incident Alerts */}
-        <section id="alerts" className="section-block">
-          <div className="section-header-row">
-            <div className="section-heading-group">
-              <span className="section-eyebrow">Automated Anomaly Detection</span>
-              <h2 className="section-main-title">Environmental Incidents & Spike Alerts</h2>
-              <p className="section-subtitle">
-                Automated alerts triggered by PM2.5 and CO2 breaches across sensor clusters
-              </p>
+        {/* ═══ 6. ALERTS ═══ */}
+        <section id="alerts" className="section">
+          <div className="section-header">
+            <div className="section-eyebrow">Anomaly Detection</div>
+            <div className="section-title">Environmental Alerts</div>
+            <div className="section-desc">
+              Automated alerts triggered by PM2.5 and CO2 threshold breaches
             </div>
           </div>
 
-          <div className="alerts-container">
-            {alerts.length > 0 ? (
-              alerts.map((a) => (
-                <div className="alert-card-row" key={a.id}>
-                  <div className="alert-info-left">
-                    <span className="alert-warning-icon">⚠️</span>
-                    <div>
-                      <div className="alert-main-text">{a.message || a.type}</div>
-                      <div className="alert-meta">
-                        Severity: <strong style={{ color: "#b91c1c" }}>{a.severity.toUpperCase()}</strong> • Triggered at {new Date(a.triggered_at || Date.now()).toLocaleTimeString()}
-                      </div>
+          {alerts.length > 0 ? (
+            <div className="alerts-list">
+              {alerts.map((a) => (
+                <div
+                  className={`alert-row ${a.severity === "critical" ? "" : "warning"}`}
+                  key={a.id}
+                >
+                  <div className="alert-body">
+                    <div className="alert-message">{a.message || a.type}</div>
+                    <div className="alert-meta">
+                      <span className={`severity ${a.severity}`}>{a.severity.toUpperCase()}</span>
+                      {" "} · {new Date(a.triggered_at || Date.now()).toLocaleTimeString()}
                     </div>
                   </div>
-
                   <button
                     className="alert-resolve-btn"
                     onClick={() => handleResolveAlert(a.id)}
                   >
-                    Acknowledge & Resolve
+                    Resolve
                   </button>
                 </div>
-              ))
-            ) : (
-              <div
-                style={{
-                  background: "var(--bg-card)",
-                  padding: "32px",
-                  borderRadius: "var(--radius-md)",
-                  textAlign: "center",
-                  border: "1px solid var(--border-light)",
-                  color: "var(--text-muted)",
-                }}
-              >
-                ✅ All 12 sensor clusters operating within safe environmental thresholds. Zero active spike alerts.
+              ))}
+            </div>
+          ) : (
+            <div className="alerts-empty">
+              <div className="alerts-empty-icon">{Icons.check}</div>
+              <div className="alerts-empty-text">
+                All sensors operating within safe thresholds. No active alerts.
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </section>
 
-        {/* 7. Footer */}
-        <footer className="web-footer">
-          <div className="footer-left">
-            <span className="footer-brand">⬡ EdgeSense</span>
-            <span>Offline-First Web-Based P2P Edge Intelligence for Air-Quality Monitoring</span>
+        {/* ═══ 7. FOOTER ═══ */}
+        <footer className="dashboard-footer">
+          <div className="footer-brand">
+            <div className="brand-mark"></div>
+            EdgeSense — Offline-First P2P Edge Intelligence
           </div>
-          <div>
-            Built & Engineered by <strong>Tanmay Joddar</strong> • MIT License 2026
+          <div className="footer-right">
+            Engineered by <strong>Tanmay Joddar</strong> · MIT 2026
           </div>
         </footer>
       </div>
