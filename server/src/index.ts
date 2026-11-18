@@ -75,7 +75,11 @@ async function start(): Promise<void> {
     });
 
     // Start WebSocket signaling server
-    createSignalingServer(config.wsPort);
+    if (process.env.WS_PORT && process.env.WS_PORT !== String(config.port)) {
+      createSignalingServer(config.wsPort);
+    } else {
+      createSignalingServer(server);
+    }
 
     // Start background engines
     startSyncEngine();

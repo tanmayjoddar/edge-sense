@@ -104,8 +104,11 @@ export default function App() {
     });
 
     // Start cloud sync
+    const apiBase = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "")
+      : "";
     startSync({
-      serverUrl: "",
+      serverUrl: apiBase,
       sensorId: SENSOR_ID,
       onSyncComplete: (result) => {
         console.log("[App] Sync complete:", result);
@@ -118,7 +121,11 @@ export default function App() {
 
     // Init P2P mesh
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${wsProtocol}//${window.location.hostname}:3002`;
+    const defaultWsUrl =
+      window.location.hostname === "localhost"
+        ? `${wsProtocol}//${window.location.hostname}:3002`
+        : `${wsProtocol}//${window.location.host}`;
+    const wsUrl = import.meta.env.VITE_WS_URL || defaultWsUrl;
     initP2P({
       signalingUrl: wsUrl,
       sensorId: SENSOR_ID,

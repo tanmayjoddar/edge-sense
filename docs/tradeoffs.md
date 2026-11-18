@@ -55,7 +55,7 @@
 Pros:
 - Exact control over `ON CONFLICT`, window functions, `FOR UPDATE SKIP LOCKED`
 - No ORM overhead or N+1 query risks
-- Interview signal: demonstrates SQL proficiency
+- High-performance execution with zero abstraction penalty
 - Easier to reason about performance
 
 Cons:
@@ -63,7 +63,7 @@ Cons:
 - More boilerplate for CRUD
 - Must handle type mapping manually
 
-**Verdict:** For a project showcasing backend skills, raw SQL is more impressive and more honest than hiding behind an ORM.
+**Verdict:** For performance-critical edge and time-series sensor ingestion, parameterized raw SQL provides maximum query optimization and transaction isolation guarantees.
 
 ## 7. WebSocket Signaling vs HTTP Polling
 
@@ -104,4 +104,4 @@ Cons:
 - Shared types could be extracted to a `shared/` package
 - Root `package.json` orchestrates both via `concurrently`
 
-**Trade-off:** Tighter coupling, but for a portfolio project, single-repo simplicity wins over microservice purity.
+**Trade-off:** Monorepo architecture simplifies unified development, continuous integration, and streamlined multi-service deployment.

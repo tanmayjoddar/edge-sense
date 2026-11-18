@@ -6,7 +6,7 @@
 
 import { WebSocketServer, WebSocket } from "ws";
 import { v4 as uuidv4 } from "uuid";
-import { IncomingMessage } from "http";
+import { IncomingMessage, Server as HttpServer } from "http";
 import type { SignalMessage, PeerInfo } from "../types";
 
 interface ConnectedPeer {
@@ -19,10 +19,14 @@ const peers: Map<string, ConnectedPeer> = new Map();
 let wss: WebSocketServer | null = null;
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
-export function createSignalingServer(port: number): WebSocketServer {
-  wss = new WebSocketServer({ port });
-
-  console.log(`[Signal] WebSocket signaling server running on port ${port}`);
+export function createSignalingServer(target: number | HttpServer): WebSocketServer {
+  if (typeof target === "number") {
+    wss = new WebSocketServer({ port: target });
+    console.log(`[Signal] WebSocket signaling server running on port ${target}`);
+  } else {
+    wss = new WebSocketServer({ server: target });
+    console.log(`[Signal] WebSocket signaling server attached to HTTP server`);
+  }
 
   wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
     const peerId = uuidv4();

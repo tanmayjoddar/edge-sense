@@ -170,6 +170,49 @@ Simulator → IndexedDB → P2P Broadcast → Edge Aggregation → Cloud Sync �
 
 ---
 
+## 🌐 Production Deployment Guide
+
+Deploy EdgeSense across modern cloud infrastructure:
+
+### 1. Database — Neon (PostgreSQL)
+1. Create a free PostgreSQL database at [neon.tech](https://neon.tech).
+2. Copy the connection string (with pooled or direct connection):
+   `postgresql://[user]:[password]@[endpoint].neon.tech/neondb?sslmode=require`
+3. Initialize the schema and seed data:
+   ```bash
+   cd server
+   DATABASE_URL="your-neon-connection-string" npm run db:init
+   DATABASE_URL="your-neon-connection-string" npm run db:seed
+   ```
+
+### 2. Backend — Railway
+1. Push your repository to GitHub.
+2. Log into [Railway](https://railway.app) and create a **New Project** → **Deploy from GitHub repo**.
+3. Select the `server` directory as the Root Directory in Service Settings (or set Root Directory to `server`).
+4. Set the following Environment Variables in Railway:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string (`?sslmode=require`)
+   - `NODE_ENV`: `production`
+   - `PORT`: `${PORT}` (Railway assigns this automatically)
+5. Build and Start commands:
+   - Build Command: `npm install && npm run build`
+   - Start Command: `npm start`
+6. Railway automatically exposes your backend on HTTPS and WSS (WebSocket is attached to the same HTTP server). Copy your assigned Railway domain (e.g. `https://edgesense-api.up.railway.app`).
+
+### 3. Frontend — Cloudflare Pages
+1. Log into [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
+2. Select repository: `tanmayjoddar/edge-sense`.
+3. Configure build settings:
+   - Framework preset: `Vite`
+   - Root directory: `client`
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+4. Add Environment Variables:
+   - `VITE_API_URL`: `https://your-railway-app.up.railway.app/api`
+   - `VITE_WS_URL`: `wss://your-railway-app.up.railway.app`
+5. Deploy! Cloudflare Pages distributes the PWA globally across edge CDN with service worker and offline caching.
+
+---
+
 ## ✅ What's Real (Fully Implemented & Running)
 
 Every component below is **production-grade code that actually executes**:
@@ -287,23 +330,14 @@ Network: Offline   → store locally, sync on reconnect
 
 ---
 
-## 📝 Resume Entry
+## 👤 Author & Maintainer
 
-**EdgeSense — Offline-First P2P Edge Monitoring System**
-
-- Designed a **web-based peer-to-peer edge system** using WebRTC to collaboratively process air-quality sensor data across distributed browser nodes.
-- Reduced cloud bandwidth usage by **~85%** through edge aggregation, data deduplication, and adaptive upload scheduling.
-- Implemented **offline-first synchronization** with IndexedDB and a priority sync queue, enabling continued operation during prolonged internet outages.
-- Built with **React, Node.js, Express, PostgreSQL** (pure SQL), WebRTC, and IndexedDB with conflict-aware syncing and automatic spike detection.
+**Tanmay Joddar**  
+- GitHub: [@tanmayjoddar](https://github.com/tanmayjoddar)  
+- Repository: [edge-sense](https://github.com/tanmayjoddar/edge-sense)
 
 ---
 
 ## 📜 License
 
-MIT © 2026
-
----
-
-<p align="center">
-  Built with ❤️ for systems engineering interviews
-</p>
+MIT © 2026 Tanmay Joddar

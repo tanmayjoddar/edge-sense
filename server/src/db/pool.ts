@@ -9,8 +9,14 @@ let pool: Pool;
 
 export function getPool(): Pool {
   if (!pool) {
+    const isSsl =
+      config.db.connectionString.includes("neon.tech") ||
+      config.db.connectionString.includes("sslmode=require") ||
+      process.env.NODE_ENV === "production";
+
     pool = new Pool({
       connectionString: config.db.connectionString,
+      ssl: isSsl ? { rejectUnauthorized: false } : undefined,
       max: config.db.maxConnections,
       idleTimeoutMillis: config.db.idleTimeoutMs,
       connectionTimeoutMillis: config.db.connectionTimeoutMs,

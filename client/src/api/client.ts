@@ -2,10 +2,11 @@
 // EdgeSense Client — REST API Client
 // ============================================================
 
-const BASE_URL = "/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
+  const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });

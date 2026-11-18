@@ -66,7 +66,7 @@ Aggregated Summary ──→ Sync Queue (priority ordered) ──→ Batch Uploa
 - **Full control** over query optimization
 - **Batch operations** with exact SQL
 - **Upsert logic** with ON CONFLICT
-- **Interview signal** — demonstrates real SQL knowledge
+- **Performance & simplicity** — zero ORM abstraction overhead, direct SQL control
 - **No abstraction leaks** — what you write is what runs
 
 ### Why PostgreSQL over MongoDB?
